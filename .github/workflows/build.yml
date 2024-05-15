@@ -1,0 +1,42 @@
+name: build
+
+# 当提交tag时触发
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    # 步骤1，检出仓库代码
+    - name: Check out Git repository
+      uses: actions/checkout@v3
+    # 步骤2，使用node环境
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.19.0
+        cache: 'yarn'
+    # 步骤3，执行npm install命令，安装依赖
+    - name: Install dependencies
+      run: yarn 
+    # 步骤4，执行打包命令（请自行修改成自己的打包命令）
+    - name: build win
+      run: yarn build:win
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    # 步骤5，发布release，需要注意包含的3个文件
+    - name: release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+         dist/*.exe
+         dist/*.exe.blockmap
+         dist/latest.yml
+        draft: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
