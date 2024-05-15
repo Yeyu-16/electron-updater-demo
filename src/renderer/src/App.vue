@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div>版本号:1.0.0</div>
+    <div>版本号:1.1.0</div>
     <button @click="updater()">检查更新</button>
     <div>下载进度:{{ percent }}</div>
   </div>
